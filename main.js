@@ -1,6 +1,6 @@
 
 
-var speed = 1 //number of time steps per second
+var speed = 300 //number of milleseconds per turn
 var paused = true
 
 var square_width = 25;
@@ -15,7 +15,13 @@ var height = 600;
 var grid_height = height/square_width;
 var grid_width = width/square_width;
 
-
+function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: evt.clientX - rect.left,
+        y: evt.clientY - rect.top
+    };
+}
 
 
 var grid = []
@@ -26,8 +32,11 @@ for(var r = 0; r<grid_height; r++){
 	}
 }
 grid[10][10]=true;
-grid[11][10]=true;
-grid[12][10]=true;
+grid[10][11]=true;
+grid[10][12]=true;
+grid[9][12]=true;
+grid[8][11]=true;
+
 /*
 	This function takes a 2D array as input with each 
 	element having values of true or false with true 
@@ -65,6 +74,16 @@ function timeStep(){
 			next_grid[r][c]=false;
 		}
 	}	
+	canvas.addEventListener('mousedown', function(evt) {
+    	var mousePos = getMousePos(canvas, evt);
+    
+    	x = Math.floor(mousePos.x/square_width);
+    	y = Math.floor(mousePos.y/square_width);
+
+    	next_grid[y][x]=true;
+    	display();
+
+	}, false);
 
 	function countNeighbors(r,c){
 		cnt = 0
@@ -84,14 +103,7 @@ function timeStep(){
 			cnt+=grid[r+1][c-1]
 		if(r<grid_height-1 && c<grid_width-1)
 			cnt+=grid[r+1][c+1]
-		/*
-		if(cnt!=0){
-			console.log(r,c,cnt)
-			console.log(grid[r+1][c-1])
-			console.log(grid[r+1][c])
-			console.log(grid[r+1][c+1])
-		*/
-		}
+		
 		return cnt;
 	}
 
@@ -114,13 +126,22 @@ function timeStep(){
 	}
 	grid = next_grid;
 }
+
+
 display();
 unpaused = true;
+
+function pause(){
+	unpaused = !unpaused;
+	if(unpaused)
+		window.setTimeout(gameLoop,speed);
+}	
+
 function gameLoop(){
 	timeStep();
 	display();
 	if(unpaused)
-		window.setTimeout(gameLoop,1000);
+		window.setTimeout(gameLoop,speed);
 }
 
-window.setTimeout(gameLoop,1000);
+window.setTimeout(gameLoop,speed);
