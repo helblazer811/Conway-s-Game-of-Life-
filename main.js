@@ -12,8 +12,8 @@ var width = 1000;
 var height = 600;
 
 //40x24 default widthxheight
-var grid_height = height/square_width;
-var grid_width = width/square_width;
+var grid_height = height/square_width+6;
+var grid_width = width/square_width+6;
 
 function getMousePos(canvas, evt) {
     var rect = canvas.getBoundingClientRect();
@@ -52,8 +52,8 @@ function display(){
 	context.fill();
 
 	//displays rectangles
-	for(var r = 0; r<grid.length; r++){
-		for(var c = 0; c<grid[0].length; c++){
+	for(var r = 3; r<grid.length-3; r++){
+		for(var c = 3; c<grid[0].length-3; c++){
 			if(grid[r][c]){
 				context.beginPath();
 				context.rect(c*square_width, r*square_width, square_width, square_width);
