@@ -74,6 +74,16 @@ function timeStep(){
 			next_grid[r][c]=false;
 		}
 	}	
+	if(clear){
+		grid = [];
+		for(var r = 0; r<grid_height; r++){
+			grid[r]=[];
+			for(var c = 0; c<grid_width; c++){
+				grid[r][c]=false;
+			}
+		}	
+		clear = false;
+	}
 	canvas.addEventListener('mousedown', function(evt) {
     	var mousePos = getMousePos(canvas, evt);
     
@@ -137,8 +147,16 @@ function pause(){
 		window.setTimeout(gameLoop,speed);
 }	
 
+clear = false;
+
+function clear_grid(){
+	clear = true;	
+	pause()
+	console.log("clearing");
+}
+
 function gameLoop(){
-	timeStep();
+	timeStep(clear);
 	display();
 	if(unpaused)
 		window.setTimeout(gameLoop,speed);
